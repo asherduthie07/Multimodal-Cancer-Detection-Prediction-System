@@ -17,6 +17,7 @@ from ml.tasks.registry import TASKS
 from .db import CaseRecord, JobRecord, SessionLocal, init_db
 from .demo import make_demo_case
 from .validation import validate_case
+from .storage import LocalArtifactStore
 
 
 @asynccontextmanager
@@ -124,12 +125,8 @@ async def upload_asset(case_id: str, file: UploadFile = File(...)):
     if suffix == ".dcm" and (len(content) < 132 or content[128:132] != b"DICM"):
         raise HTTPException(422, "DICOM preamble is missing; manual review required")
     digest = hashlib.sha256(content).hexdigest()
-    root = Path(os.getenv("ARTIFACT_DIR", "./artifacts")).resolve()
-    target_dir = root / case_id
-    target_dir.mkdir(parents=True, exist_ok=True)
-    target = target_dir / f"{digest}{suffix}"
-    target.write_bytes(content)
-    return {"sha256": digest, "artifact_uri": str(target), "size": len(content),
+    target = LocalArtifactStore(os.getenv("ARTIFACT_DIR", "./artifacts")).put(case_id, digest, suffix, content)
+    return {"sha256": digest, "artifact_uri": target, "size": len(content),
         "registration_status": "stored_unvalidated", "message": "Upload requires metadata registration and deidentification review before model use."}
 
 

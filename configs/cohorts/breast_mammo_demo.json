@@ -1,0 +1,11 @@
+{
+  "id": "breast_mammo_detection_demo",
+  "mode": "synthetic_demo",
+  "cancer_type": "breast",
+  "task": "detection",
+  "endpoint": "study_malignancy_classification",
+  "index_time": "mammography_examination_time",
+  "required_modalities": ["imaging:mammography"],
+  "optional_modalities": ["genomics:protein_biomarker", "clinical:structured"],
+  "model_status": "synthetic_fixture_only"
+}
