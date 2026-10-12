@@ -1,0 +1,10 @@
+{
+  "id": "clinical_baseline_template",
+  "status": "not_executed",
+  "seed": 2026,
+  "split_policy": "patient_level_70_15_15",
+  "preprocessing": "fit_on_train_only",
+  "model": "regularized_logistic_regression",
+  "calibration": "validation_only",
+  "test_policy": "untouched_until_final_selection"
+}
