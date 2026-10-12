@@ -1,0 +1,8 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "projects": {"web": {"projectType": "application", "root": "", "sourceRoot": "src", "architect": {
+    "build": {"builder": "@angular/build:application", "options": {"browser": "src/main.ts", "index": "src/index.html", "styles": ["src/styles.css"], "tsConfig": "tsconfig.json", "outputPath": "dist/web"}},
+    "serve": {"builder": "@angular/build:dev-server", "options": {"buildTarget": "web:build"}}
+  }}}
+}
