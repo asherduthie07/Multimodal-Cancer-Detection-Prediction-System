@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -13,6 +13,7 @@ interface Job { id: string; status: string; prediction: Prediction | null; }
 @Component({selector: 'app-root', standalone: true, imports: [CommonModule], templateUrl: './app.component.html'})
 export class AppComponent implements OnInit {
   private http = inject(HttpClient);
+  private cdr = inject(ChangeDetectorRef);
   cases: Case[] = [];
   selected: Case | null = null;
   alignment: Alignment | null = null;
@@ -35,12 +36,13 @@ export class AppComponent implements OnInit {
     this.busy = true; this.error = '';
     try { const item = await firstValueFrom(this.http.post<Case>('/api/demo/case', {})); await this.refresh(); await this.select(item); }
     catch { this.error = 'Could not create synthetic case.'; }
-    finally { this.busy = false; }
+    finally { this.busy = false; this.cdr.detectChanges(); }
   }
   async select(item: Case) {
     this.selected = item; this.job = null; this.alignment = null; this.error = '';
     try { this.alignment = await firstValueFrom(this.http.post<Alignment>(`/api/cases/${item.id}/align/${this.taskId}`, {})); }
     catch { this.error = 'Could not load alignment report.'; }
+    finally { this.cdr.detectChanges(); }
   }
   async infer() {
     if (!this.selected) return;
@@ -53,7 +55,7 @@ export class AppComponent implements OnInit {
       }
       if (this.job?.status === 'failed') this.error = 'Inference job failed.';
     } catch { this.error = 'Could not submit inference job.'; }
-    finally { this.busy = false; }
+    finally { this.busy = false; this.cdr.detectChanges(); }
   }
   formatDate(value: string) { return new Date(value).toLocaleString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}); }
   keys(value: Record<string, number> | undefined) { return Object.entries(value ?? {}); }

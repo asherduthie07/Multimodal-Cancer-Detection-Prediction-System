@@ -8,9 +8,10 @@ Updated 2026-10-12. Status describes executed work, not intended features.
 | Three modality interfaces and subtype registry | Implemented but not trained | Mammography, molecular, clinical encoders explicitly report unavailable weights |
 | Synthetic case, alignment, API, asynchronous job, result | Implemented and tested | API flow test; deterministic fixture clearly labeled |
 | PostgreSQL, Redis worker, local artifacts, S3 adapter | Implemented but not integration tested | Compose provided; Docker unavailable locally; S3 adapter requires optional boto3 |
-| Angular evidence dashboard | Implemented; build verification pending | Displays case, three pipelines, alignment, result, evaluation status |
+| Angular evidence dashboard | Implemented and tested | Production build and Playwright case-to-result flow passed |
 | Bounded manifest audit and immutable patient split output | Implemented and tested | Does not ingest a real cohort |
-| Real cohort adapter and clinical-only fitted baseline | Planned or blocked | Requires source audit, reuse permission, label definition, and data |
+| Clinical-only baseline and detection evaluation workflow | Implemented but not trained on real data | Train-only preprocessing, explicit patient split, synthetic workflow test |
+| Real cohort adapter and audited experiment | Planned or blocked | Requires source audit, reuse permission, label definition, and data |
 | Image preprocessing and pretrained embeddings | Planned or blocked | No trusted weights or image dataset configured |
 | Molecular preprocessing, fitted encoders, cached embeddings | Planned or blocked | No compatible assay dataset configured |
 | Concatenation, learned fusion, contrastive alignment | Planned or blocked | Requires genuine matched patient training data |
@@ -18,4 +19,4 @@ Updated 2026-10-12. Status describes executed work, not intended features.
 | Internal evaluation | None | Zero real patients evaluated |
 | External validation | None | Zero external cohorts evaluated |
 
-Actual automated result: backend/model-contract tests **9 passed** with one third-party deprecation warning. No model training or clinical validation was run.
+Actual automated result: backend/model-contract tests **11 passed** with two third-party warnings; Playwright browser flow **1 passed**; Angular production build passed. Production npm audit reported **0 vulnerabilities**; the full tree still reports **3 development dependency advisories**. Docker Compose was not run because Docker is unavailable here. The clinical workflow ran only on synthetic test rows; no real-data model training or clinical validation was run.

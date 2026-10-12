@@ -1,7 +1,10 @@
 .env
 .venv/
 node_modules/
+.angular/
 dist/
+playwright-report/
+test-results/
 __pycache__/
 .pytest_cache/
 *.pyc

@@ -7,3 +7,5 @@
 5. Complete the evidence dashboard, model cards, container startup, and tested evaluation reports.
 
 Initial demonstrable task: synthetic mammography-study malignancy classification at the examination index time. All synthetic predictions are deterministic software fixtures, not fitted model outputs. No real-data cohort or evaluated model is bundled.
+
+Stage 1 is implemented and verified with backend and browser tests. A bounded manifest audit and clinical baseline evaluation command provide part of Stage 2, but no real cohort has been onboarded or trained. See `IMPLEMENTATION_STATUS.md` for the exact tested and blocked items.

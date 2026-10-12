@@ -8,7 +8,7 @@ Prerequisites: Python 3.11 or 3.13, Node 22.12 or newer, npm, and optionally Doc
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+.venv/bin/pip install -r requirements.lock.txt
 PYTHONPATH=. .venv/bin/uvicorn services.api.oncofusion.main:app --reload --port 8000
 ```
 
@@ -33,8 +33,21 @@ The Compose setup serves the same UI on port 4200 and API on port 8000. Docker w
 
 ```bash
 .venv/bin/pytest -q
-cd apps/web && npm run build
+npm --prefix apps/web run build
+npm --prefix apps/web run test:e2e
 ```
+
+The Playwright test expects both local servers running and uses installed Google Chrome.
+
+## Clinical baseline workflow
+
+Install the additional research dependencies with `.venv/bin/pip install -r requirements-research.lock.txt`. After auditing a **real**, permitted cohort and creating a patient split manifest, prepare one index-time row per patient with `patient_id`, binary `label`, ISO-formatted `index_time` and `available_at`, and explicitly selected clinical feature columns. Run:
+
+```bash
+PYTHONPATH=. .venv/bin/python -m ml.evaluation.train_clinical cohort.csv split.json --numeric age --categorical smoking_status --source-manifest source.json --output evaluation.json
+```
+
+The source manifest must declare `mode: real_research`, match the CSV SHA-256, and document reuse permission and label definition. Without it, the workflow marks its output `synthetic_test_only`. Preprocessing is fitted on training patients only; validation and test metrics are reported separately. No model is automatically registered or made available for inference. This workflow is tested on synthetic rows but has not been run on a real cohort.
 
 ## API
 
